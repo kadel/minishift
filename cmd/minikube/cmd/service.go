@@ -28,8 +28,9 @@ import (
 )
 
 var (
-	namespace      string
-	serviceURLMode bool
+	namespace        string
+	serviceURLMode   bool
+	serviceURLPrefix string
 )
 
 // serviceCmd represents the service command
@@ -47,7 +48,7 @@ var serviceCmd = &cobra.Command{
 
 		api := libmachine.NewClient(constants.Minipath, constants.MakeMiniPath("certs"))
 		defer api.Close()
-		url, err := cluster.GetServiceURL(api, namespace, service)
+		url, err := cluster.GetServiceURL(api, namespace, service, serviceURLPrefix)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			if _, ok := err.(cluster.MissingNodePortError); !ok {
@@ -68,5 +69,6 @@ var serviceCmd = &cobra.Command{
 func init() {
 	serviceCmd.Flags().StringVarP(&namespace, "namespace", "n", "default", "The service namespace")
 	serviceCmd.Flags().BoolVar(&serviceURLMode, "url", false, "Display the kubernetes service URL in the CLI instead of opening it in the default browser")
+	serviceCmd.Flags().StringVar(&serviceURLPrefix, "prefix", "http://", "URL prefix to use when using --url flag")
 	RootCmd.AddCommand(serviceCmd)
 }

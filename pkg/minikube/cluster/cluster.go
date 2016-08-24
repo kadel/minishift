@@ -445,7 +445,7 @@ func GetConsoleURL(api libmachine.API) (string, error) {
 	return fmt.Sprintf("https://%s:%d", ip, constants.APIServerPort), nil
 }
 
-func GetServiceURL(api libmachine.API, namespace, service string) (string, error) {
+func GetServiceURL(api libmachine.API, namespace, service, prefix string) (string, error) {
 	host, err := checkIfApiExistsAndLoad(api)
 	if err != nil {
 		return "", err
@@ -466,7 +466,7 @@ func GetServiceURL(api libmachine.API, namespace, service string) (string, error
 		return "", err
 	}
 
-	return fmt.Sprintf("http://%s:%d", ip, port), nil
+	return fmt.Sprintf("%s%s:%d", prefix, ip, port), nil
 }
 
 type serviceGetter interface {
